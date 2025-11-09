@@ -1,0 +1,16 @@
+
+.texto-grande {
+    font-size: 2rem; 
+    font-weight: bold; 
+    color: #ffffff; 
+    text-transform:uppercase;
+  }
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    width: 200px; 
+    display: inline-block; 
+  }
+  
+  

@@ -1,0 +1,29 @@
+{
+  "short_name": "Punto Shein",
+  "name": "Punto Shein Tienda de Moda",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"  
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "description": "Tienda de moda Punto Shein: descubre las últimas tendencias y productos exclusivos.",
+  "lang": "es-MX"
+}
