@@ -15,7 +15,6 @@ export const obtenerProductosPorFiltros = async (filtros) => {
   }
 };
 
-
 export const mostrarStock = (stock) => {
     if (stock === 0) {
       return {

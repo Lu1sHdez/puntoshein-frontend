@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-globals */
 
-const CACHE_VERSION = 'v3-' + new Date().getTime();
-const CACHE_NAME = 'puntoshein-cache-' + CACHE_VERSION;
+// Nombre fijo para manejar versiones
+const CACHE_NAME = "puntoshein-cache-v7";
+const OFFLINE_URL = "/index.html";
 
-const urlsToCache = [
+const STATIC_ASSETS = [
   "/",
   "/index.html",
-  "/favicon.ico",
   "/manifest.json",
+  "/favicon.ico",
   "/logo192.png",
   "/logo512.png",
-
   "/acercaDe",
   "/privacidad",
   "/terminos",
@@ -20,56 +20,78 @@ const urlsToCache = [
   "/preguntasFrecuentes",
 ];
 
-// Instalar
+// === INSTALACIÓN ===
 self.addEventListener("install", (event) => {
-  console.log("[SW] Instalando...");
+  console.log("[SW] Instalando y precacheando...");
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.addAll(STATIC_ASSETS);
+
+      // Precarga automática de todos los archivos generados en el build
+      try {
+        const res = await fetch("/asset-manifest.json");
+        const manifest = await res.json();
+        const files = Object.values(manifest.files || {});
+        const assets = files.filter(
+          (path) =>
+            path &&
+            (path.endsWith(".js") ||
+              path.endsWith(".css") ||
+              path.endsWith(".png") ||
+              path.endsWith(".jpg") ||
+              path.endsWith(".svg"))
+        );
+        await cache.addAll(assets);
+        console.log(`[SW] Archivos estáticos añadidos: ${assets.length}`);
+      } catch (err) {
+        console.warn("[SW] No se pudo leer asset-manifest.json", err);
+      }
+    })()
   );
+  self.skipWaiting();
 });
 
-// Activar
+// === ACTIVACIÓN ===
 self.addEventListener("activate", (event) => {
   console.log("[SW] Activado");
   event.waitUntil(
-    caches.keys().then((names) =>
-      Promise.all(names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      )
     )
   );
+  self.clients.claim();
 });
 
-// Interceptar peticiones
+// === INTERCEPTAR PETICIONES ===
 self.addEventListener("fetch", (event) => {
   const { request } = event;
-
-  // Solo intercepta GET
   if (request.method !== "GET") return;
 
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      // Devuelve el archivo desde la cache si existe
-      if (cachedResponse) return cachedResponse;
+    caches.match(request).then((cached) => {
+      if (cached) return cached;
 
-      // Si no existe, pide a la red y lo guarda
       return fetch(request)
-        .then((networkResponse) => {
-          // No caches respuestas HTML para evitar el error MIME
+        .then((response) => {
+          // Cachear recursos estáticos
           if (
-            !networkResponse ||
-            networkResponse.status !== 200 ||
-            networkResponse.type !== "basic" ||
-            networkResponse.headers.get("content-type")?.includes("text/html")
+            response.ok &&
+            (request.url.includes("/static/") ||
+              request.url.endsWith(".js") ||
+              request.url.endsWith(".css") ||
+              request.url.endsWith(".png") ||
+              request.url.endsWith(".jpg") ||
+              request.url.endsWith(".svg"))
           ) {
-            return networkResponse;
+            const resClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, resClone));
           }
-
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, responseToCache));
-          return networkResponse;
+          return response;
         })
-        .catch(() => caches.match("/index.html"));
+        .catch(() => caches.match(OFFLINE_URL)); // Fallback cuando no hay red
     })
   );
 });

@@ -27,7 +27,7 @@ export function inicializarNotificacionesConexion() {
     window._notificacionesInicializadas = true;
 
     window.addEventListener("offline", () => {
-      console.log("🔴 Sin conexión detectada");
+      console.log("Sin conexión detectada");
       mostrarNotificacion(
         "Punto Shein",
         "No tienes conexión a internet. Algunas funciones no estarán disponibles."
@@ -35,7 +35,7 @@ export function inicializarNotificacionesConexion() {
     });
 
     window.addEventListener("online", () => {
-      console.log("🟢 Conexión restaurada");
+      console.log("Conexión restaurada");
       mostrarNotificacion(
         "Punto Shein",
         "Conexión restaurada. Puedes seguir navegando normalmente."
