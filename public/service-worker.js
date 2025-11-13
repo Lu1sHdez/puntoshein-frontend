@@ -65,6 +65,36 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+
+  // Solo interceptar API GET
+  if (request.method === "GET" && request.url.includes("/api/")) {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
+
+        // 1) Responder instantáneo desde caché
+        const cachedResponse = await cache.match(request);
+
+        // 2) Actualizar en segundo plano
+        const networkPromise = fetch(request)
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.ok) {
+              cache.put(request, networkResponse.clone());
+            }
+            return networkResponse;
+          })
+          .catch(() => null);
+
+        // 3) Cache si existe; si no, esperar la red
+        return cachedResponse || networkPromise;
+      })()
+    );
+
+    return; // ⚠ para que no pase al manejador general
+  }
+});
 // === INTERCEPTAR PETICIONES ===
 self.addEventListener("fetch", (event) => {
   const { request } = event;
