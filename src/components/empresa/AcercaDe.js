@@ -54,9 +54,9 @@ const AcercaDe = () => {
         className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl"
       >
         <div
-          className="relative left-[calc(50%-12rem)] aspect-[1155/678] w-[40rem] 
-                     -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr 
-                     from-blue-400 to-blue-700 opacity-20 
+          className="relative left-[calc(50%-12rem)] aspect-[1155/678] w-[40rem]
+                     -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr
+                     from-blue-400 to-blue-700 opacity-20
                      sm:left-[calc(50%-36rem)] sm:w-[72rem]"
           style={{
             clipPath:
@@ -65,42 +65,56 @@ const AcercaDe = () => {
         />
       </div>
 
+      {/* Contenedor principal */}
       <motion.div
         {...dataLoadingAnimation}
         className="max-w-5xl mx-auto px-6 sm:px-10 py-10 bg-white border border-gray-200 rounded-2xl shadow-lg"
       >
         {/* Encabezado */}
-        <header className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight mb-3 animate-fade-in-up">
+        <header className="text-center mb-10">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight mb-3">
             Acerca de Nosotros
           </h1>
-          <p className="text-sm sm:text-base text-gray-500">
+          <p className="text-gray-600 text-base max-w-2xl mx-auto">
             Conoce más sobre quiénes somos y lo que nos inspira
           </p>
         </header>
 
-        {/* Contenido principal */}
-        <div className="text-gray-700 leading-relaxed space-y-10 animate-fade-in-up">
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Misión
-            </h2>
+        {/* Contenido estilo "tarjetas" igual que Política de Privacidad */}
+        <div className="space-y-10 animate-fade-in-up text-gray-700 leading-relaxed">
+
+          {/* Misión */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-5 border border-gray-100 rounded-xl bg-gradient-to-br from-blue-50 to-white shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h2 className="text-2xl font-bold text-blue-700 mb-2">Misión</h2>
             <p className="text-justify">{empresa.mision}</p>
-          </div>
+          </motion.div>
 
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Visión
-            </h2>
+          {/* Visión */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="p-5 border border-gray-100 rounded-xl bg-gradient-to-br from-blue-50 to-white shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h2 className="text-2xl font-bold text-blue-700 mb-2">Visión</h2>
             <p className="text-justify">{empresa.vision}</p>
-          </div>
+          </motion.div>
 
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Valores
-            </h2>
-            {empresa.valores && empresa.valores.length > 0 ? (
-              <ul className="list-disc list-inside space-y-2">
+          {/* Valores */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="p-5 border border-gray-100 rounded-xl bg-gradient-to-br from-blue-50 to-white shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h2 className="text-2xl font-bold text-blue-700 mb-2">Valores</h2>
+            {empresa.valores?.length > 0 ? (
+              <ul className="list-disc pl-6 space-y-2">
                 {empresa.valores.map((valor, index) => (
                   <li key={index}>
                     <strong className="text-blue-600">{valor.nombre}:</strong>{" "}
@@ -111,33 +125,41 @@ const AcercaDe = () => {
             ) : (
               <p>No hay valores definidos.</p>
             )}
-          </div>
+          </motion.div>
 
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Historia
-            </h2>
+          {/* Historia */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
+            className="p-5 border border-gray-100 rounded-xl bg-gradient-to-br from-blue-50 to-white shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h2 className="text-2xl font-bold text-blue-700 mb-2">Historia</h2>
             <p className="text-justify">{empresa.historia}</p>
-          </div>
+          </motion.div>
 
-          <div>
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Nuestro Equipo
-            </h2>
+          {/* Equipo */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
+            className="p-5 border border-gray-100 rounded-xl bg-gradient-to-br from-blue-50 to-white shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h2 className="text-2xl font-bold text-blue-700 mb-2">Nuestro Equipo</h2>
             <p className="text-justify">{empresa.equipo}</p>
-          </div>
+          </motion.div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-10 shadow-sm">
-            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
-              Contacto
-            </h2>
-            <p>
-              <strong>Correo:</strong> {empresa.correo}
-            </p>
-            <p>
-              <strong>Teléfono:</strong> {empresa.telefono}
-            </p>
-          </div>
+          {/* Contacto */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+            className="p-5 border border-blue-200 bg-blue-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <h2 className="text-2xl font-bold text-blue-700 mb-2">Contacto</h2>
+            <p><strong>Correo:</strong> {empresa.correo}</p>
+            <p><strong>Teléfono:</strong> {empresa.telefono}</p>
+          </motion.div>
         </div>
       </motion.div>
 
@@ -147,9 +169,9 @@ const AcercaDe = () => {
         className="absolute inset-x-0 top-[calc(100%-15rem)] -z-10 transform-gpu overflow-hidden blur-3xl"
       >
         <div
-          className="relative left-[calc(50%+4rem)] aspect-[1155/678] w-[40rem] 
-                     -translate-x-1/2 bg-gradient-to-tr from-blue-400 
-                     to-blue-700 opacity-20 
+          className="relative left-[calc(50%+4rem)] aspect-[1155/678] w-[40rem]
+                     -translate-x-1/2 bg-gradient-to-tr from-blue-400
+                     to-blue-700 opacity-20
                      sm:left-[calc(50%+36rem)] sm:w-[72rem]"
           style={{
             clipPath:
