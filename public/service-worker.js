@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 
 // Nombre fijo para manejar versiones
-const CACHE_NAME = "puntoshein-cache-v7";
+const CACHE_NAME = "puntoshein-cache-v1";
 const OFFLINE_URL = "/index.html";
 
 const STATIC_ASSETS = [
@@ -65,48 +65,57 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
 
-  // Solo interceptar API GET
   if (request.method === "GET" && request.url.includes("/api/")) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
 
-        // 1) Responder instantáneo desde caché
-        const cachedResponse = await cache.match(request);
+        const cached = await cache.match(request);
 
-        // 2) Actualizar en segundo plano
-        const networkPromise = fetch(request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.ok) {
-              cache.put(request, networkResponse.clone());
-            }
-            return networkResponse;
+        const network = fetch(request)
+          .then((res) => {
+            if (res.ok) cache.put(request, res.clone());
+            return res;
           })
           .catch(() => null);
 
-        // 3) Cache si existe; si no, esperar la red
-        return cachedResponse || networkPromise;
+        // Si NO hay red y NO hay cache → devolver fallback JSON seguro
+        return (
+          cached ||
+          network ||
+          new Response(
+            JSON.stringify({
+              offline: true,
+              data: null,
+              mensaje: "Sin conexión y sin datos guardados.",
+            }),
+            { headers: { "Content-Type": "application/json" } }
+          )
+        );
       })()
     );
 
-    return; // ⚠ para que no pase al manejador general
+    return;
   }
 });
-// === INTERCEPTAR PETICIONES ===
+
+
 self.addEventListener("fetch", (event) => {
-  const { request } = event;
+  const request = event.request;
   if (request.method !== "GET") return;
 
   event.respondWith(
     caches.match(request).then((cached) => {
+      // Si el recurso está en cache → devolverlo
       if (cached) return cached;
 
       return fetch(request)
         .then((response) => {
-          // Cachear recursos estáticos
+          // Cachear archivos estáticos del build
           if (
             response.ok &&
             (request.url.includes("/static/") ||
@@ -116,12 +125,11 @@ self.addEventListener("fetch", (event) => {
               request.url.endsWith(".jpg") ||
               request.url.endsWith(".svg"))
           ) {
-            const resClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, resClone));
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
           }
           return response;
         })
-        .catch(() => caches.match(OFFLINE_URL)); // Fallback cuando no hay red
+        .catch(() => caches.match(OFFLINE_URL)); // react bundle aunque esté offline
     })
   );
 });
