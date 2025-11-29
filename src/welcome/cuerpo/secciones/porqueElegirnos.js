@@ -3,7 +3,7 @@ import { BsTag, BsTruck, BsShieldCheck  } from "react-icons/bs";
 
 const PorqueElegirnos = () => {
   return (
-    <section className="relative isolate overflow-hidden bg-white py-20 sm:py-24">
+    <section className="relative isolate overflow-hidden bg-white py-20 sm:py-10">
       {/* Fondo difuminado azul suave */}
       <div
         aria-hidden="true"
