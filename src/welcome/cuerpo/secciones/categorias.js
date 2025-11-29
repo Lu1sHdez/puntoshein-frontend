@@ -65,7 +65,7 @@ const Categorias = () => {
   }, [categoriaSeleccionada]);
 
   return (
-    <section className="relative isolate overflow-hidden bg-white py-24 sm:py-10">
+    <section className="relative isolate overflow-hidden bg-white py-2 sm:py-10">
       <div
         aria-hidden="true"
         className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-72"
