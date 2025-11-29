@@ -86,7 +86,14 @@ const Categorias = () => {
         </h2>
 
         {/* Botones de categoría */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div
+          className="
+            flex gap-3 mb-12 overflow-x-auto whitespace-nowrap px-1 
+            sm:flex-wrap sm:justify-center sm:overflow-visible
+            scrollbar-hide
+          "
+        >
+
           <button
             onClick={() => setCategoriaSeleccionada(null)}
             className={`px-4 py-2 rounded-full border text-sm sm:text-base font-medium transition-all duration-200 
